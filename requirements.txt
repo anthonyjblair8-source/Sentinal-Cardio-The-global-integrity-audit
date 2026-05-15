@@ -1,0 +1,3 @@
+# Sentinel Cardio: Required Python dependencies
+# No external libraries used for Version 1.0
+# Native Python STD libraries only

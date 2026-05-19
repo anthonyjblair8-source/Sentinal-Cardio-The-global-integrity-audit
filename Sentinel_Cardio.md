@@ -27,78 +27,83 @@ The Protocol does not propose new technology alone; it proposes a binding ethica
 
 ### 4. Mathematical Engine
 
-**Pre-existing content is omitted for brevity**
+The Mathematical Engine provides the formal analytical framework for verifying data integrity and tracking systemic divergence across distributed nodes. It relies on a continuous evaluation of informational resonance, mapped as a projective manifold topology.
+
+#### 4.1 Coherence and Divergence Metrics
+
+To quantify the integrity of an incoming data node without relying on centralized validation, we define the **Systemic Coherence Index (SCI)** over a specific observation window [t_0, t_1].
+
+Let x_i(t) represent the state vector of a local node, and \( \mu(t) \) represent the cross-verified baseline calculated across the active multi-node network. The node variance \( \sigma^2(t) \) relative to the baseline is expressed as:
+
+The SCI decays exponentially as temporal drift (\( \Delta t = t - t_0 \)) and node variance increase, defined by the formula:
+
+Where:
+- \( \lambda \) is the systemic decay constant (the rate at which unverified data loses priority).
+- \( \sigma_{max}^2 \) is the absolute variance threshold, beyond which a node is flagged as decoupled.
+
+#### 4.2 Manifold Projection and Alignment
+
+Data states are projected onto a low-dimensional manifold to evaluate topological consistency. The alignment error \( E_{align} \) between the local node manifold \( M_{local} \) and the objective baseline manifold \( M_{base} \) is minimized using an isometric mapping constraint:
+
+Where \( d_M(i,j) \) represents the geodesic distance between data points \( i \) and \( j \) on the respective manifolds. If \( E_{align} \) exceeds the strict compliance limit \( \epsilon \), an automated state-mutation vector is triggered.
 
 ---
 
-### 5. Material Forensics & PMC (Projective Manifold Cosmology)
+### 6. Operational Layer – Deposition Mode
 
-The Material Forensics layer serves as the primary empirical anchor for the Sentinel Cardio suite. By analyzing the physical, chemical, and structural anomalies of physical artifacts, this module establishes a verifiable, immutable baseline of reality that prevents data manipulation or institutional historical rewriting.
+Deposition Mode is the high-precision operational state triggered automatically when the Mathematical Engine detects an alignment exception, or manually initiated during a formal forensic audit. It locks the local subsystem into an immutable recording state to preserve data sovereignty.
 
-#### 5.1 Empirical Analysis Protocols
-
-To convert physical material into deterministic data points, artifacts must undergo rigorous non-destructive and micro-structural testing. The standard pipeline utilizes two primary empirical pillars:
-
-##### A. Elemental Characterization via XRF / EDS
-
-* **Protocol:** Handheld or laboratory X-ray Fluorescence (XRF) and Energy-Dispersive X-ray Spectroscopy (EDS) are utilized to map the elemental composition profile of the target medium.
-* **Target Anomalies:** Tracking localized trace-element weight percentages (e.g., transition metal ratios in vitrified silicates, matrix elements in jade, or crystalline phase distributions).
-* **Baseline Mapping:** The resulting spectra are normalized into an elemental signature vector \( \mathbf{V}_{elem} \), where each component represents the normalized peak intensity of a specific atomic number (Z).
-
-##### B. Micro-Structural Petrography
-
-* **Protocol:** Optical petrography via thin-section analysis under cross-polarized light, coupled with scanning electron microscopy (SEM) if phase transitions are present.
-* **Target Anomalies:** Identification of shock-induced microstructures, devitrification phases, flow banding, and localized crystalline alignment errors.
-* **Quantification:** Crystalline lattice distortion and phase boundaries are mapped as a structural stress tensor \( \mathbf{T}_{struct} \), establishing an empirical timeline of the material's environmental history.
-
-#### 5.2 The PMC Material Schema
-
-Once the empirical testing is complete, the physical properties are compiled into a standardized, machine-readable JSON metadata schema. This schema serves as the physical profile that is hashed directly into the **Exhibit A Manifest (Section 8)**.
-
-```json
-{
-  "material_forensics": {
-    "artifact_id": "ARTIFACT-001-HOQUIAM",
-    "timestamp_utc": "2026-05-18T19:17:22Z",
-    "matrix_type": "Vitrified Silicate / Jadeite Alteration",
-    "spectroscopy": {
-      "method": "XRF-Portable-Scan",
-      "calibration_baseline": "NIST-SRM-2711a",
-      "elemental_profile": {
-        "Si": 0.4235,
-        "Fe": 0.0812,
-        "Ca": 0.0541,
-        "Al": 0.0319,
-        "Mg": 0.0124,
-        "Trace_Anomalies": [
-          {"element": "Ti", "weight_percent": 0.0045},
-          {"element": "Zr", "weight_percent": 0.0012}
-        ]
-      }
-    },
-    "petrography": {
-      "thin_section_id": "TS-001-B",
-      "matrix_crystallinity": "Partially Devitrified Amorphous Glass",
-      "microstructures": {
-        "planar_deformation_features": false,
-        "flow_banding_index": 0.78,
-        "recrystallization_temperature_est_k": 1450.0
-      }
-    },
-    "pmc_alignment": {
-      "manifold_projection_coordinate": [0.1482, -0.8921, 0.3144],
-      "local_entropy_variance": 0.0034
-    }
-  }
-}
+```
+[State Trigger: SCI < Baseline OR Manual Inversion]
+                       │
+                       ▼
+         ┌───────────────────────────┐
+         │ 6.1 Cryptographic Freeze  │ ──► Memory registers isolated
+         └───────────────────────────┘
+                       │
+                       ▼
+         ┌───────────────────────────┐
+         │  6.2 Forensic Streaming   │ ──► Append-only hardware logging
+         └───────────────────────────┘
+                       │
+                       ▼
+         ┌───────────────────────────┐
+         │ 6.3 Multi-Node Handshake  │ ──► Verification phase
+         └───────────────────────────┘
+                       │
+             ┌─────────┴─────────┐
+             ▼                   ▼
+     [Validation Fails]  [Validation Passes]
+             │                   │
+             ▼                   ▼
+    {Quarantine Mode}    {Re-Integration & Reset}
 ```
 
-#### 5.3 Mathematical Integration with the Engine
+#### 6.1 State Trigger and Isolation Rules
 
-The physical vector \( \mathbf{V}_{elem} \) and the structural tensor \( \mathbf{T}_{struct} \) are combined using a non-linear mapping function \( \Phi \) to generate the material's intrinsic state vector \( x_{material}(t) \) used by Section 4.1:
+An operational transition to Deposition Mode occurs immediately upon satisfying the following logical boundary condition:
 
-If a physical sample is re-tested and its new state vector yields an alignment error \( E_{align} > \epsilon \) due to unauthorized structural modification or data tampering, the system interprets this as an immediate physical integrity breach and forces the node into **Deposition Mode (Section 6)**.
+Upon initialization, the following **Precision Inversion Rules** are enforced at the hardware/software boundary:
+
+- **Memory Inversion:** All read/write permissions on current active data blocks are modified to read-only (RO). Memory pages containing the target audit data are locked in place (mlock) to prevent caching to unverified storage media.
+- **Network Decoupling:** Non-essential external I/O channels are systematically suspended. The node restricts its communication stack exclusively to the verified peer-to-peer handshake network.
+
+#### 6.2 Forensic Logging Pipeline
+
+Once Deposition Mode is active, incoming material forensics and systemic metadata are routed through an append-only, high-fidelity logging pipeline:
+
+- **Hardware Timestamping:** Every entry is bound to a localized hardware-level atomic clock timestamp, establishing a verifiable timeline independent of network time protocols (NTP).
+- **Deterministic Hashing:** Data structures are committed sequentially into a cryptographic Merkle tree. Each state transition hash (\( H_n \)) is explicitly dependent on the historical state, preventing back-dated modification.
+
+#### 6.3 Resolution and Handshake Protocols
+
+A node cannot exit Deposition Mode independently. Restoration to standard monitoring mode requires a **Multi-Node Handshake**:
+
+- **Consensus Verification:** Minimum K-of-N independent, verified nodes must execute an alignment audit on the deposited ledger.
+- **Re-Integration Criteria:** The state is released back to standard operational status only when the consensus alignment error drops back below the recovery limit.
+
+If verification fails, the node isolates itself into a permanent **Quarantine Mode**, preserving the compromised dataset for material forensics analysis while severing its cross-verification authority.
 
 ---
 
-**Next Sections Pending.**
+### Next Sections Pending.

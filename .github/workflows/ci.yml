@@ -1,18 +1,9 @@
-name: CI Pipeline
-
-on: [push, pull_request]
-
+name: Debugger
+on: [push]
 jobs:
-  build:
+  debug:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: List Files for Debugging
-        run: ls -R $GITHUB_WORKSPACE
-
-      - name: Execute Sentinel Engine
-        run: |
-          echo "Looking in: $GITHUB_WORKSPACE"
-          python "$GITHUB_WORKSPACE/math_engine.py"
+      - uses: actions/checkout@v3
+      - name: Full Recursive Directory List
+        run: ls -R

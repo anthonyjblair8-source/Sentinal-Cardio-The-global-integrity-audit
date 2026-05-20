@@ -9,10 +9,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: List Files
-        run: ls -R
+      - name: List Files for Debugging
+        run: ls -R $GITHUB_WORKSPACE
 
       - name: Execute Sentinel Engine
         run: |
-          echo "Looking for math_engine.py..."
-          python math_engine.py
+          echo "Looking in: $GITHUB_WORKSPACE"
+          python "$GITHUB_WORKSPACE/math_engine.py"

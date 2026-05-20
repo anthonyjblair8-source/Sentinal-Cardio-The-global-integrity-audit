@@ -1,0 +1,18 @@
+{
+  "manifest_metadata": {
+    "version": "1.0",
+    "last_updated": "2026-05-20",
+    "operator": "Sentinel Cardio Keeper Node",
+    "status": "AWAITING_LIQUIDITY"
+  },
+  "forensic_exhibits": [
+    {
+      "exhibit_id": "GENESIS-001",
+      "timestamp": "2026-05-20T00:00:00Z",
+      "description": "System Initialization and Soul Anchoring",
+      "sci_score": 0.9842,
+      "integrity_hash": "SC-TOKEN-6CF90125C04B"
+    }
+  ],
+  "audit_notes": "The ledger is open. Any drift detected henceforth will be logged with a corresponding manifold analysis."
+}

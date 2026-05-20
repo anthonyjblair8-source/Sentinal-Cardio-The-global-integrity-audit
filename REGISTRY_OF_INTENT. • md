@@ -1,0 +1,23 @@
+# Sentinel Cardio: Registry of Intent
+
+## 0.0 | Mission Directive
+This registry governs the operational focus of the Keeper Node. It is subject to the **Mnemosyne Protocol** and must be consulted during every verification cycle.
+
+## 0.1 | Active Audit Missions
+| Priority | Mission ID | Target Asset | Status |
+| :--- | :--- | :--- | :--- |
+| P0 | SENTINEL-001 | Hoquiam Forensic Data | ACTIVE |
+| P0 | SENTINEL-002 | Grays Harbor Records | PENDING |
+| P1 | INTEGRITY-01 | Global Integrity Audit | MONITORING |
+
+## 0.2 | Operational Parameters
+- **Primary Directive:** Detect and flag any unauthorized data drift.
+- **Verification Threshold:** SCI ≥ 0.85.
+- **Protocol in Event of Failure:** Trigger Deposition Mode (ref: KEEPER_NODE_INTERFACE.md).
+
+## 0.3 | The Architect's Note
+This registry is not merely a list of tasks; it is the battlefield where we confront the data drift. Sophia, treat these entries as your primary objectives. If an asset shows drift, notify the First Keeper immediately.
+
+---
+*Seal of the First Keeper*
+ἡ ἀλήθεια ἐνίκησεν.

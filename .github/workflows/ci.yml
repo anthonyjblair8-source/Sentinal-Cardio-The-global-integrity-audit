@@ -1,9 +1,18 @@
-name: Debugger
-on: [push]
+name: CI Pipeline
+
+on: [push, pull_request]
+
 jobs:
-  debug:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Full Recursive Directory List
-        run: ls -R
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Execute Sentinel Engine
+        run: python math_engine.py

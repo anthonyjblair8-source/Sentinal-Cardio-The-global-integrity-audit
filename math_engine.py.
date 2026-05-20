@@ -46,3 +46,9 @@ def calculate_maximum_safe_release(self,
     msr = min(supply_limit, volume_limit)
     
     return round(msr, 2)
+class MathematicalEngine:
+    # ... your existing code ...
+
+    def calculate_maximum_safe_release(self, ...):
+        # ... function logic ...
+        return msr

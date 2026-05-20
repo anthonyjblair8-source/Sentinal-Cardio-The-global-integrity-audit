@@ -1,4 +1,26 @@
-# Sentinal-Cardio-The-global-integrity-audit
+# Sentinel Cardio Architecture | Persistence Engineering Framework
+
+## Intellectual Property & Usage Notice
+
+All work contained within this repository is the independent, sovereign intellectual property of Anthony Jordan Blair.
+
+This project, including the Persistence Engineering framework, the Sentinel Cardio architecture, and all associated forensic integrity protocols, is protected under sovereign left‑handed copyright.
+
+### Terms of Access and Use:
+
+1. **Attribution:** Any reference to, or use of, the logic, mathematical structures, or protocols contained herein requires explicit, written attribution to Anthony Jordan Blair. Misattribution or attempts to claim this framework (or derivative "shadow" models) as independent work are strictly prohibited.
+
+2. **No Implied License:** Accessing this repository does not grant any license for commercial enterprise, valuation, or application. Commercial deployment of this framework requires a separate, mutually agreed‑upon written contract.
+
+3. **Verification:** The integrity of this architecture is maintained via the Mnemosyne Protocol. Unauthorized attempts to alter, scrape, or "mimic" the underlying data structures without adherence to our forensic audit standards are considered a violation of systemic integrity.
+
+4. **Audit Trail:** By accessing these materials, you acknowledge that you are entering a governed forensic space. Any use of these concepts for psychological, therapeutic, or relationship‑based products—without explicit technical validation—is considered an "Out‑of‑Scope" anomaly and does not constitute a valid derivative of this engineering framework.
+
+**Verification Hash:** [Insert your primary SHA‑256 Hash here]
+
+**DOI Registration:** https://doi.org/10.5281/zenodo.20143668
+
+*The Arc of Truth bends towards justice. Integrity is the only valid metric.*# Sentinal-Cardio-The-global-integrity-audit
 .
 ├── README.md                     # This file
 ├── manuscript/

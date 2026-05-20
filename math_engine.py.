@@ -20,3 +20,29 @@ def run_engine():
 
 if __name__ == "__main__":
     run_engine()
+def calculate_maximum_safe_release(self, 
+                                   current_circulating_supply: float, 
+                                   daily_trading_volume: float, 
+                                   volatility_limit: float = 0.20) -> float:
+    """
+    Calculates the Maximum Safe Release (MSR) of tokens to prevent 
+    market crash via hyperinflation or order-book breakdown.
+    
+    :param current_circulating_supply: Total tokens currently in market.
+    :param daily_trading_volume: Average USD volume traded daily.
+    :param volatility_limit: The percentage threshold (default 20%).
+    :return: Maximum number of tokens that can be safely injected.
+    """
+    # 1. Calculate the '20% Rule' threshold
+    supply_limit = current_circulating_supply * volatility_limit
+    
+    # 2. Calculate the '2.5x Volume Strain' threshold
+    # Assuming current token price estimate if not provided; 
+    # for this engine, we use volume as the primary limiting factor.
+    volume_limit = daily_trading_volume * 2.5
+    
+    # 3. The Safe Release is the minimum of the two constraints
+    # (We prioritize the tighter constraint to maintain stability)
+    msr = min(supply_limit, volume_limit)
+    
+    return round(msr, 2)

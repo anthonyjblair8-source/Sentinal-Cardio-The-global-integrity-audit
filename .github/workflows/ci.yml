@@ -14,5 +14,16 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Execute Sentinel Engine
-        run: python math_engine.py
+      - name: Find and Execute Sentinel Engine
+        run: |
+          echo "Scanning subdirectories for engine logic..."
+          # This command finds the file wherever it is nested
+          FILE_PATH=$(find . -name "math_engine.py" -print -quit)
+          if [ -z "$FILE_PATH" ]; then
+            echo "Error: math_engine.py still not found!"
+            ls -R
+            exit 1
+          else
+            echo "SUCCESS: Found at $FILE_PATH. Executing..."
+            python "$FILE_PATH"
+          fi

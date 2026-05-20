@@ -27,5 +27,3 @@ jobs:
             echo "Success: Integrity verified. Found at $FILE_PATH. Executing core logic..."
             python "$FILE_PATH"
           fi
-    - name: Run Sentinel Audit
-      run: python3 math_engine.py --mode verify

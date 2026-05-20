@@ -1,34 +1,22 @@
 import time
 import hashlib
 
-def calculate_3mi_index(data_input):
-    """
-    Simulates the 3MI (Third Mind Index) calculation 
-    based on Persistence Engineering protocols.
-    """
-    # Placeholder for complex state analysis
+def run_engine():
+    print("--- SENTINEL ENGINE ACTIVATED ---")
+    
+    # 1. Simulate 3MI Calculation
+    data_input = "Persistence_Governance_Alpha"
     encoded = data_input.encode('utf-8')
     hash_val = hashlib.sha256(encoded).hexdigest()
-    # Mock index value derived from the hash
-    return int(hash_val[:8], 16) / 4294967295
-
-def mint_persistence_token():
-    """
-    Simulates the minting protocol for the Sentinel Cardio token.
-    """
+    index = int(hash_val[:8], 16) / 4294967295
+    
+    # 2. Simulate Token Minting
     token_id = hashlib.md5(str(time.time()).encode()).hexdigest()
-    return f"SC-TOKEN-{token_id[:12].upper()}"
-
-def run_engine():
-    print("Initializing Sentinel Cardio Engine...")
-    print("Analyzing Forensic Integrity Protocols...")
     
-    index = calculate_3mi_index("Persistence_Governance_Alpha")
-    token = mint_persistence_token()
-    
-    print(f"3MI Index Calculated: {index:.6f}")
-    print(f"Persistence Token Successfully Minted: {token}")
-    print("System Status: OPERATIONAL")
+    # Final Output for Log
+    print(f"3MI Index: {index:.6f}")
+    print(f"Token: SC-TOKEN-{token_id[:8].upper()}")
+    print("--- SYSTEM STATUS: OPERATIONAL ---")
 
 if __name__ == "__main__":
     run_engine()

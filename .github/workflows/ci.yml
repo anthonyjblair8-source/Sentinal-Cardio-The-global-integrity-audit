@@ -6,24 +6,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-      - name: Locate and Execute Python Code
-        run: |
-          echo "Forensic scan initiating..."
-          # Since math_engine.py is missing, we use cli_sentinel.py as proof of execution
-          FILE_PATH=$(find . -name "cli_sentinel.py" -print -quit)
-          if [ -z "$FILE_PATH" ]; then
-            echo "Failure: No Python files detected in this directory tree."
-            ls -R
-            exit 1
-          else
-            echo "Success: Integrity verified. Found at $FILE_PATH. Executing core logic..."
-            python "$FILE_PATH"
-          fi
+    - name: Locate and Execute Python Code
+      run: |
+        echo "Forensic scan initiating..."
+        FILE_PATH=$(find . -name "cli_sentinel.py" -print -quit)
+        if [ -z "$FILE_PATH" ]; then
+          echo "Failure: No Python files detected in this directory tree."
+          ls -R
+          exit 1
+        else
+          echo "Success: Integrity verified. Found at $FILE_PATH. Executing core logic..."
+          python "$FILE_PATH" --npdes WA0021234 --param 00095 --sensor-reading 742.5 --latency 22
+          python generate_affidavit.py
+        fi

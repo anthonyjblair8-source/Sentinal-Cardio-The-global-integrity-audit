@@ -1,9 +1,23 @@
 {
+  "$schema": "https://raw.githubusercontent.com/anthonyjblair8-source/Sentinal-Cardio-The-global-integrity-audit/main/schemas/manifest-v1.json",
   "manifest_metadata": {
     "version": "1.0",
-    "last_updated": "2026-05-20",
+    "last_updated": "2026-05-21",
     "operator": "Sentinel Cardio Keeper Node",
-    "status": "AWAITING_LIQUIDITY"
+    "status": "DEPOSITION_MODE",
+    "audit_messages": []
+  },
+  "transmutation_circle": {
+    "timestamp": "2026-05-21T15:00:00Z",
+    "atmospheric_river_intensity": 0.82,
+    "node_shifts": [
+      { "node": "Quinault", "drift_km": 0.34, "direction_deg": 104 },
+      { "node": "Shelton", "drift_km": 0.21, "direction_deg": 78 },
+      { "node": "Olympia", "drift_km": 0.15, "direction_deg": 92 },
+      { "node": "Raymond", "drift_km": 0.27, "direction_deg": 113 },
+      { "node": "Aberdeen", "drift_km": 0.19, "direction_deg": 85 }
+    ],
+    "circuit_integrity": 0.91
   },
   "forensic_exhibits": [
     {
@@ -13,6 +27,5 @@
       "sci_score": 0.9842,
       "integrity_hash": "SC-TOKEN-6CF90125C04B"
     }
-  ],
-  "audit_notes": "The ledger is open. Any drift detected henceforth will be logged with a corresponding manifold analysis."
+  ]
 }

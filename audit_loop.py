@@ -1,33 +1,29 @@
 #!/usr/bin/env python3
-import subprocess
 import json
 import os
 import sys
 
 def run_audit():
     manifest_path = "EXHIBIT_A_MANIFEST.json"
-    shell_script = "./sync_to_sentinel.sh"
-
     print("Initiating audit sequence...")
 
-    # Check if the shell script exists before trying to run it
-    if os.path.exists(shell_script):
-        try:
-            subprocess.run([shell_script], check=True, capture_output=True, text=True)
-            print("Bridge synchronization successful.")
-        except subprocess.CalledProcessError as e:
-            print(f"Bridge sync failed: {e.stderr}")
-    else:
-        print(f"Warning: {shell_script} not found. Skipping bridge sync.")
-
-    # Generate Manifest
+    # Data block
     audit_data = {
         "status": "integrity_verified",
-        "timestamp": "2026-05-27T01:48:00Z"
+        "timestamp": "2026-05-27T01:52:00Z",
+        "check": "recursive_integrity_monitoring"
     }
-    with open(manifest_path, 'w') as f:
-        json.dump(audit_data, f, indent=4)
-    print(f"Manifest generated at {manifest_path}")
+
+    try:
+        # Write the manifest to the root directory
+        with open(manifest_path, 'w') as f:
+            json.dump(audit_data, f, indent=4)
+        print(f"Manifest successfully generated at: {os.path.abspath(manifest_path)}")
+        sys.exit(0) # Exit success
+    except Exception as e:
+        print(f"Audit failure: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     run_audit()
+

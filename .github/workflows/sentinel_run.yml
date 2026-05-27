@@ -1,29 +1,12 @@
-name: Execute Sentinel Cardio Run
-
-on:
-  workflow_dispatch:
-
-jobs:
-  run-audit:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Codebase
-      uses: actions/checkout@v4
-
-    - name: Setup Native Python Environment
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    - name: Execute Matrix Sweep
-      run: |
-        python cli_sentinel.py --npdes WA0021234 --param 00095 --sensor-reading 742.5 --latency 22
-        python generate_affidavit.py
-
-    - name: Commit and Push Sealed Manifest
-      run: |
-        git config --global user.name "Sentinel Cardio Keeper"
-        git config --global user.email "keeper@sentinel.local"
-        git add EXHIBIT_A_MANIFEST.json FORENSIC_AFFIDAVIT.txt
-        git commit -m "Sealed forensic affidavit: PHCA baseline validation block" || echo "No changes to commit"
-        git push
+      - name: Commit and Push Sealed Manifest
+        run: |
+          git config --global user.name "Sentinel Cardio Keeper"
+          git config --global user.email "keeper@sentinel.local"
+          # Check for both files before staging
+          if [ -f "EXHIBIT_A_MANIFEST.json" ] && [ -f "FORENSIC_AFFIDAVIT.txt" ]; then
+            git add EXHIBIT_A_MANIFEST.json FORENSIC_AFFIDAVIT.txt
+            git commit -m "ARCHITECT DEPLOYMENT: Sealed forensic affidavit: PHCA baseline validation block."
+            git push
+          else
+            echo "Warning: Manifest or Affidavit missing. Skipping commit to preserve system state."
+          fi

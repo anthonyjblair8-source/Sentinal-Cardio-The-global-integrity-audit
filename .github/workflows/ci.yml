@@ -33,4 +33,3 @@ jobs:
           else
             echo "No manifest to stage; pipeline stable."
           fi
-

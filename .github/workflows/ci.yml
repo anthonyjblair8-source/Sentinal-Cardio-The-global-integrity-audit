@@ -1,46 +1,21 @@
-name: Sentinel Engine Execution
-on: [push, pull_request]
-
-permissions:
-  contents: write
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false # Disables SSH attempt
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Execute Full Audit Sequence
-        run: |
-          pip install -r requirements.txt
-          python3 audit_loop.py
-          python3 generate_affidavit.py
-
       - name: Finalize Repository State
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Remove any stale lock file
-          rm -f .git/index.lock
+          # Force clean any hidden Git state that causes SIGQUIT
+          rm -rf .git/index.lock
           
           MANIFEST=$(find . -name "EXHIBIT_A_MANIFEST.json" -print -quit)
           
           if [ -n "$MANIFEST" ]; then
             git add "$MANIFEST"
-            git commit -m "ARCHITECT DEPLOYMENT: CI synchronized and manifest locked."
+            # Use '|| true' to prevent commit failure if nothing changed
+            git commit -m "ARCHITECT DEPLOYMENT: CI synchronized." || true
             
-            # Use the token to authenticate the HTTP push
+            # Use a 'safe' push that handles retries if the network hits a SIGQUIT
             git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-            git push origin HEAD:main
+            git push origin HEAD:main || (sleep 5 && git push origin HEAD:main)
           else
             echo "No manifest to stage; pipeline stable."
           fi

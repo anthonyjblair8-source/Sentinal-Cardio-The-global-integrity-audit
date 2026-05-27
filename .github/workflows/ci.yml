@@ -1,21 +1,3 @@
-name: Sentinel Engine Execution
-on: [push, pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
       - name: Execute Forensic Audit Sequence
         run: |
           echo "Initiating multi-node forensic scan..."
@@ -25,4 +7,6 @@ jobs:
           python sentinel_bridge_c2.py
           # Execute final affidavit generation
           python generate_affidavit.py
-          echo "Audit sequence complete."
+          # Stage the manifest for the sealed commit
+          git add EXHIBIT_A_MANIFEST.json
+          echo "Audit sequence complete and manifest staged."

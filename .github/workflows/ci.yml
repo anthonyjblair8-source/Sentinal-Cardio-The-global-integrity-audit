@@ -1,11 +1,37 @@
+name: Sentinel Engine Execution
+on: [push, pull_request]
+
+# 1. Add this block to grant the bot permission to write
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 2. Add the token to checkout
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Execute Full Audit Sequence
+        run: |
+          pip install -r requirements.txt
+          python3 audit_loop.py
+          python3 generate_affidavit.py
+
       - name: Finalize Repository State
         run: |
-          # Check if manifest exists and just print/log it for now 
-          # to isolate the 128 error from the Git operation.
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           MANIFEST=$(find . -name "EXHIBIT_A_MANIFEST.json" -print -quit)
           if [ -n "$MANIFEST" ]; then
-            echo "Manifest found at $MANIFEST. Content:"
-            cat "$MANIFEST"
-          else
-            echo "Pipeline complete; no manifest found to stage."
+            git add "$MANIFEST"
+            git commit -m "ARCHITECT DEPLOYMENT: CI synchronized."
+            git push
           fi

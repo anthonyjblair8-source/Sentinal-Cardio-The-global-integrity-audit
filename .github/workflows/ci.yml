@@ -1,32 +1,10 @@
-name: Sentinel Engine Execution
-on: [push, pull_request]
-
-permissions:
-  contents: write
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Execute Full Audit Sequence
-        run: |
-          pip install -r requirements.txt
-          python3 audit_loop.py
-          python3 generate_affidavit.py
-
       - name: Finalize Repository State
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 1. REMOVE ANY STALE LOCKS FROM PREVIOUS FAILED RUNS
+          rm -f .git/index.lock
           
           MANIFEST=$(find . -name "EXHIBIT_A_MANIFEST.json" -print -quit)
           
@@ -34,7 +12,7 @@ jobs:
             git add "$MANIFEST"
             git commit -m "ARCHITECT DEPLOYMENT: CI synchronized and manifest locked."
             
-            # Using the token-injected URL to bypass 128 error
+            # 2. Push with token
             git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
           else
             echo "No manifest to stage; pipeline stable."

@@ -12,24 +12,24 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Execute Matrix Sweep
+      - name: Execute Sentinel Cardio Matrix Sweep
         run: |
           pip install -r requirements.txt
           python3 cli_sentinel.py --npdes WA0021234 --param 00095 --sensor-reading 742.5 --latency 22
           python3 generate_affidavit.py
 
-      - name: Finalize Manifest
+      - name: Finalize Manual Run Records
         run: |
           git config --global user.name "Sentinel Cardio Keeper"
           git config --global user.email "keeper@sentinel.local"
-          # Locate and stage files dynamically
+          # Locate and stage generated forensic artifacts
           MANIFEST=$(find . -name "EXHIBIT_A_MANIFEST.json" -print -quit)
           AFFIDAVIT=$(find . -name "FORENSIC_AFFIDAVIT.txt" -print -quit)
           
           if [ -n "$MANIFEST" ] && [ -n "$AFFIDAVIT" ]; then
             git add "$MANIFEST" "$AFFIDAVIT"
-            git commit -m "ARCHITECT DEPLOYMENT: Sealed forensic records locked and committed."
+            git commit -m "ARCHITECT DEPLOYMENT: Manual run forensic records locked."
             git push
           else
-            echo "Records not detected. Pipeline stable."
+            echo "Artifacts not generated; pipeline stable."
           fi

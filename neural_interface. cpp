@@ -1,0 +1,120 @@
+// neural_interface.cpp – Brain‑Computer Interface for Sentinel Wristband (Continuum Key)
+// Supports NeuroSky MindWave (serial) and placeholder for ADS1299.
+// Place this in the firmware/ folder and #include "neural_interface.cpp" in main.cpp
+
+#ifndef NEURAL_INTERFACE_CPP
+#define NEURAL_INTERFACE_CPP
+
+#include <Arduino.h>
+
+// ========== Sensor Types ==========
+#define EEG_NONE        0
+#define EEG_MINDWAVE    1
+#define EEG_ADS1299     2
+
+// ========== Derived Neural States ==========
+enum NeuralState {
+  NEUTRAL = 0,
+  FOCUSED = 1,
+  MEDITATIVE = 2,
+  DISTRESS = 3,
+  INTENT_TRIGGER = 4
+};
+
+// ========== Class Definition ==========
+class NeuralInterface {
+private:
+  int _sensorType;
+  HardwareSerial* _serial;
+  float _alpha, _beta, _theta, _gamma, _delta;
+  float _attention, _meditation;
+  float _intentAlpha, _intentBeta;
+  bool _initialized;
+
+  void _parseMindWave() {
+    while (_serial->available() >= 2) {
+      if (_serial->read() != 0xAA) continue;
+      if (_serial->peek() != 0xAA) continue;
+      _serial->read(); // second sync
+      int plen = _serial->read();
+      if (plen > 170) continue;
+      uint8_t buf[256];
+      for (int i = 0; i < plen; i++) buf[i] = _serial->read();
+      for (int i = 0; i < plen; i++) {
+        uint8_t code = buf[i];
+        int len = buf[++i];
+        if (code == 0x80) _attention = buf[++i] / 100.0;
+        else if (code == 0x81) _meditation = buf[++i] / 100.0;
+        else if (code == 0x83) _alpha = buf[++i];
+        else if (code == 0x84) _beta = buf[++i];
+        else if (code == 0x85) _gamma = buf[++i];
+        else if (code == 0x86) _theta = buf[++i];
+        else if (code == 0x87) _delta = buf[++i];
+        i += len;
+      }
+    }
+  }
+
+  void _parseADS1299() {
+    // Placeholder for future SPI/I2C implementation
+  }
+
+public:
+  NeuralInterface(int sensorType, HardwareSerial* serialPort = nullptr) {
+    _sensorType = sensorType;
+    _serial = serialPort;
+    _alpha = _beta = _theta = _gamma = _delta = 0;
+    _attention = _meditation = 0;
+    _intentAlpha = 0.5; _intentBeta = 0.5;
+    _initialized = false;
+  }
+
+  bool begin() {
+    if (_sensorType == EEG_MINDWAVE && _serial) {
+      _serial->begin(57600);
+      _initialized = true;
+      return true;
+    } else if (_sensorType == EEG_ADS1299 && _serial) {
+      // init I2C/SPI
+      _initialized = true;
+      return true;
+    }
+    return false;
+  }
+
+  bool readBrainwaves() {
+    if (!_initialized) return false;
+    if (_sensorType == EEG_MINDWAVE) _parseMindWave();
+    else if (_sensorType == EEG_ADS1299) _parseADS1299();
+    return true;
+  }
+
+  float getAlpha() { return _alpha; }
+  float getBeta() { return _beta; }
+  float getTheta() { return _theta; }
+  float getGamma() { return _gamma; }
+  float getDelta() { return _delta; }
+  float getAttention() { return _attention; }
+  float getMeditation() { return _meditation; }
+
+  NeuralState getState() {
+    if (_beta > 0.6 && _theta < 0.3) return FOCUSED;
+    if (_alpha > 0.7 && _theta > 0.4) return MEDITATIVE;
+    if (_gamma > 0.8 || (_attention > 0.8 && _meditation < 0.2)) return DISTRESS;
+    if (isIntentDetected()) return INTENT_TRIGGER;
+    return NEUTRAL;
+  }
+
+  bool isIntentDetected() {
+    // Example: user's "navigate" intent = alpha/beta ratio near target
+    float ratio = (_alpha + 0.01) / (_beta + 0.01);
+    return (ratio > _intentAlpha && ratio < _intentBeta);
+  }
+
+  void setIntentThresholds(float alpha_ratio, float beta_ratio) {
+    _intentAlpha = alpha_ratio;
+    _intentBeta = beta_ratio;
+  }
+};
+
+#endif // NEURAL_INTERFACE_CPP

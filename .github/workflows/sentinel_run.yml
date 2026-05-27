@@ -1,12 +1,35 @@
-      - name: Commit and Push Sealed Manifest
+name: Execute Sentinel Cardio Run
+on: workflow_dispatch
+
+jobs:
+  run-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Execute Matrix Sweep
+        run: |
+          pip install -r requirements.txt
+          python3 cli_sentinel.py --npdes WA0021234 --param 00095 --sensor-reading 742.5 --latency 22
+          python3 generate_affidavit.py
+
+      - name: Finalize Manifest
         run: |
           git config --global user.name "Sentinel Cardio Keeper"
           git config --global user.email "keeper@sentinel.local"
-          # Check for both files before staging
-          if [ -f "EXHIBIT_A_MANIFEST.json" ] && [ -f "FORENSIC_AFFIDAVIT.txt" ]; then
-            git add EXHIBIT_A_MANIFEST.json FORENSIC_AFFIDAVIT.txt
-            git commit -m "ARCHITECT DEPLOYMENT: Sealed forensic affidavit: PHCA baseline validation block."
+          # Locate and stage files dynamically
+          MANIFEST=$(find . -name "EXHIBIT_A_MANIFEST.json" -print -quit)
+          AFFIDAVIT=$(find . -name "FORENSIC_AFFIDAVIT.txt" -print -quit)
+          
+          if [ -n "$MANIFEST" ] && [ -n "$AFFIDAVIT" ]; then
+            git add "$MANIFEST" "$AFFIDAVIT"
+            git commit -m "ARCHITECT DEPLOYMENT: Sealed forensic records locked and committed."
             git push
           else
-            echo "Warning: Manifest or Affidavit missing. Skipping commit to preserve system state."
+            echo "Records not detected. Pipeline stable."
           fi

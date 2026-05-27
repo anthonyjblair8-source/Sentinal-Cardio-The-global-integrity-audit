@@ -12,23 +12,25 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Execute Audit Sequence
+      - name: Execute Full Audit Sequence
         run: |
           pip install -r requirements.txt
+          # Core execution sequence
           python3 audit_loop.py
           python3 sentinel_bridge_c2.py
           python3 generate_affidavit.py
 
-      - name: Finalize Manifest
+      - name: Finalize Repository State
         run: |
           git config --global user.name "Sentinel Cardio Keeper"
           git config --global user.email "keeper@sentinel.local"
-          # Locate and stage the manifest dynamically
-          FILE=$(find . -name "EXHIBIT_A_MANIFEST.json" -print -quit)
-          if [ -n "$FILE" ]; then
-            git add "$FILE"
-            git commit -m "ARCHITECT DEPLOYMENT: Manifest locked and committed."
+          # Locate and stage output records dynamically
+          MANIFEST=$(find . -name "EXHIBIT_A_MANIFEST.json" -print -quit)
+          if [ -n "$MANIFEST" ]; then
+            git add "$MANIFEST"
+            git commit -m "ARCHITECT DEPLOYMENT: Full workflow synchronized and manifest locked."
             git push
           else
-            echo "Manifest not found. Pipeline stable."
+            echo "Pipeline complete; no new manifest to stage."
           fi
+

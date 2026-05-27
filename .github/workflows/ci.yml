@@ -1,27 +1,12 @@
-name: Sentinel Engine Execution
-on: [push, pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install Dependencies
+      - name: Commit and Push Sealed Manifest
         run: |
-          pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-      - name: Execute Forensic Audit Sequence
-        run: |
-          echo "Initiating multi-node forensic scan..."
-          # Execute the core loop with error logging
-          python3 audit_loop.py || { echo "Audit loop failed at line 67"; exit 1; }
-          python3 sentinel_bridge_c2.py
-          python3 generate_affidavit.py
+          git config --global user.name "Sentinel Cardio Keeper"
+          git config --global user.email "keeper@sentinel.local"
+          # Check if the file exists before attempting to stage it
+          if [ -f "EXHIBIT_A_MANIFEST.json" ]; then
+            git add EXHIBIT_A_MANIFEST.json
+            git commit -m "ARCHITECT DEPLOYMENT: Sealed manifest successfully integrated."
+            git push
+          else
+            echo "Warning: EXHIBIT_A_MANIFEST.json not found, skipping commit."
+          fi

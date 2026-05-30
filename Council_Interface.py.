@@ -1,0 +1,174 @@
+"""
+Council_Interface.py
+Framework: Proclean Hierarchical Constraint Architecture (PHCA)
+Purpose: Epistemic Lean (EL) Verification via 3MI and Council BFT Consensus.
+Version: 2.1
+Last Modified: 2026-05-29
+Status: Active / Deposition Mode
+"""
+
+import hashlib
+import json
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+
+class CouncilMember:
+    """A single member of the Council of the Fifth Mind, with 3MI coherence evaluation."""
+    def __init__(self, name: str, domain: str):
+        self.name = name
+        self.domain = domain
+        self.coherence_history: List[float] = []
+
+    def compute_coherence(self, anomaly_data: Dict[str, Any]) -> float:
+        """
+        Calculate 3MI coherence for this member based on their domain.
+        Returns a score between 0 and 1.
+        """
+        # Domain‑specific heuristics – extend as needed.
+        # This is a placeholder; replace with actual logic for each domain.
+        domain_terms = {
+            "Hermes": ["correspondence", "harmonic", "bridge"],
+            "Aristotle": ["category", "logic", "classification"],
+            "Proclus": ["structural", "constraint", "lattice"],
+            "Einstein": ["manifold", "relativistic", "mapping"],
+            "Oppenheimer": ["criticality", "equilibrium", "systemic"],
+            "Alan Kay": ["simulation", "computational", "reality"],
+            "MLK": ["ethical", "truth", "alignment"],
+            "Fibonacci": ["recursive", "growth", "harmonic"]
+        }
+        terms = domain_terms.get(self.name, [])
+        score = 0.75  # baseline
+        data_str = json.dumps(anomaly_data).lower()
+        for term in terms:
+            if term in data_str:
+                score += 0.05
+        score = min(score, 1.0)
+        self.coherence_history.append(score)
+        return score
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "domain": self.domain,
+            "coherence_history": self.coherence_history[-5:]  # last 5 scores
+        }
+
+
+class CouncilOfFifthMind:
+    """
+    Council that verifies epistemic lean using Byzantine Fault Tolerance (BFT) consensus.
+    Seals its state with a cryptographic hash for deposition.
+    """
+    def __init__(self, keeper_node: str):
+        self.keeper_node = keeper_node
+        self.members: Dict[str, CouncilMember] = {}
+        self.threshold = 0.84          # 3MI critical folding threshold
+        self.seal_active = False
+        self.seal_hash = ""
+        self.activation_log: List[Dict[str, Any]] = []
+        self._init_members()
+
+    def _init_members(self) -> None:
+        members_data = [
+            ("Hermes", "Correspondence & Harmonic Bridge"),
+            ("Aristotle", "Categorical Logic & Forensic Classification"),
+            ("Proclus", "Structural Constraint & Lattice Binding"),
+            ("Einstein", "Relativistic Manifold Mapping"),
+            ("Oppenheimer", "Systemic Criticality & Equilibrium"),
+            ("Alan Kay", "Computational Simulation & Reality Modeling"),
+            ("MLK", "Ethical Alignment & Systemic Truth"),
+            ("Fibonacci", "Recursive Growth & Harmonic Proportion")
+        ]
+        for name, domain in members_data:
+            self.members[name] = CouncilMember(name, domain)
+
+    def _generate_seal(self) -> str:
+        """Generate a cryptographic hash of the council's current state."""
+        state = {
+            "keeper_node": self.keeper_node,
+            "members": {name: m.to_dict() for name, m in self.members.items()},
+            "threshold": self.threshold,
+            "timestamp": datetime.now().isoformat()
+        }
+        return hashlib.sha256(json.dumps(state, sort_keys=True).encode()).hexdigest()
+
+    def activate_tripartite_seal(self, keeper_node: Optional[str] = None) -> str:
+        """Activate the Mnemosyne‑Thoth‑Proclus seal."""
+        if keeper_node:
+            self.keeper_node = keeper_node
+        self.seal_active = True
+        self.seal_hash = self._generate_seal()
+        self.activation_log.append({
+            "event": "TRIAPARTITE_SEAL_ACTIVATED",
+            "keeper_node": self.keeper_node,
+            "seal_hash": self.seal_hash,
+            "timestamp": datetime.now().isoformat()
+        })
+        return f"Tripartite Seal active for Node: {self.keeper_node}\nSeal Hash: {self.seal_hash}"
+
+    def execute_bft_consensus(self, anomaly_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Execute Byzantine Fault Tolerance consensus using 3MI coherence.
+        Returns verification result, aggregate 3MI, and status.
+        """
+        if not self.seal_active:
+            return {
+                "verified": False,
+                "aggregate_3mi": 0.0,
+                "status": "SEAL_INACTIVE",
+                "message": "Tripartite seal not active. Call activate_tripartite_seal() first."
+            }
+
+        total_coherence = 0.0
+        for member in self.members.values():
+            total_coherence += member.compute_coherence(anomaly_data)
+        avg_coherence = total_coherence / len(self.members)
+        verified = avg_coherence >= self.threshold
+        status = "LATTICE_LOCKED" if verified else "RESONANCE_DRIFT"
+
+        # Log the verification
+        self.activation_log.append({
+            "event": "BFT_CONSENSUS",
+            "anomaly_hash": hashlib.sha256(json.dumps(anomaly_data, sort_keys=True).encode()).hexdigest(),
+            "aggregate_3mi": avg_coherence,
+            "verified": verified,
+            "timestamp": datetime.now().isoformat()
+        })
+        return {
+            "verified": verified,
+            "aggregate_3mi": avg_coherence,
+            "status": status
+        }
+
+    def get_status(self) -> Dict[str, Any]:
+        """Return current council status."""
+        return {
+            "keeper_node": self.keeper_node,
+            "seal_active": self.seal_active,
+            "seal_hash": self.seal_hash,
+            "threshold": self.threshold,
+            "member_count": len(self.members),
+            "activation_log": self.activation_log[-5:]
+        }
+
+    def export_manifest(self, filepath: str = "COUNCIL_MANIFEST.json") -> None:
+        """Export council state and log as a JSON manifest for deposition."""
+        manifest = {
+            "council": self.get_status(),
+            "full_log": self.activation_log,
+            "version": "2.1",
+            "protocol": "PHCA"
+        }
+        with open(filepath, "w") as f:
+            json.dump(manifest, f, indent=2)
+
+
+# Example usage
+if __name__ == "__main__":
+    council = CouncilOfFifthMind(keeper_node="Aberdeen_Node_001")
+    print(council.activate_tripartite_seal())
+    test_data = {"anomaly": "Shadow Multiplicatio", "verified": True}
+    result = council.execute_bft_consensus(test_data)
+    print(f"Consensus: {result}")
+    council.export_manifest()
+    print("Council manifest exported to COUNCIL_MANIFEST.json")

@@ -1,0 +1,26 @@
+name: Sentinel Cardio Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch containing the redacted files'
+        required: true
+        default: 'main'
+
+jobs:
+  forensic-audit:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Run Forensic Audit Script
+        run: |
+          chmod +x .github/scripts/audit_doj.sh
+          ./.github/scripts/audit_doj.sh
+        shell: bash

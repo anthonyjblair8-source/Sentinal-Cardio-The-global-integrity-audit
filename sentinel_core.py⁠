@@ -1,0 +1,10 @@
+Sentinel-Cardio-The-global-integrity-audit/
+├── .github/
+│   └── workflows/          # Your CI/CD pipeline definitions
+├── data/
+│   └── doj_records/        # Your archived/scraped records
+├── sentinel_core.py        # <--- PLACE THE NEW FILE HERE
+├── controller.py           # Existing management logic
+├── requirements.txt
+└── repository_integrity_log.txt
+external_crawl_sweep("https://www.justice.gov/archives/foia-library")

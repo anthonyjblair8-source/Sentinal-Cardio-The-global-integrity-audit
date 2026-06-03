@@ -1,0 +1,32 @@
+import os
+import json
+import subprocess
+
+def auto_matrix_sweep():
+    """Internal sweep to populate ledger automatically."""
+    target_dirs = ["data/doj_records/"]
+    ledger = []
+    for directory in target_dirs:
+        if os.path.exists(directory):
+            for filename in os.listdir(directory):
+                filepath = os.path.join(directory, filename)
+                ledger.append({"file": filepath, "status": "indexed"})
+    
+    with open('ledger.json', 'w') as f:
+        json.dump(ledger, f)
+    print(f"--- AUTO-SWEEP COMPLETE: {len(ledger)} items indexed ---")
+
+def run_orchestration():
+    # 1. Perform sweep automatically
+    auto_matrix_sweep()
+    
+    # 2. Proceed with audit using the newly created ledger
+    print("--- SENTINEL ENGINE: PROCEEDING WITH AUDIT ---")
+    audit_process = subprocess.run(['bash', '.github/scripts/audit_doj.sh'], capture_output=True, text=True)
+    
+    # 3. Output results
+    print(audit_process.stdout)
+
+if __name__ == "__main__":
+    run_orchestration()
+

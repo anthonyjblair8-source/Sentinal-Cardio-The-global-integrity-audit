@@ -1,6 +1,6 @@
 # Sentinel Cardio: The Global Integrity Audit
 
-Sentinel Cardio is an advanced auditing and monitoring system designed to analyze sensitive data, detect anomalies, and ensure data integrity. This robust framework helps organizations maintain transparency and security throughout their workflows.
+Sentinel Cardio is an advanced auditing and monitoring system designed to analyze sensitive data, detect anomalies, ensure data integrity, and optimize performance. This robust framework helps organizations maintain transparency and security throughout their workflows.
 
 ---
 
@@ -14,9 +14,10 @@ Sentinel Cardio is an advanced auditing and monitoring system designed to analyz
 - `nlp_audit_analysis.py` extracts contextual entities, including names, locations, and organizations, from audit logs.
 - Generates a JSON report categorizing key data insights.
 
-### **3. Modular Integrity Checks**
+### **3. Modular Integrity and Performance Checks**
 - **Checksum Validation** (`checksum_validator.py`): Verifies file integrity using SHA-256 checksums.
 - **Pattern Anomaly Detection** (`anomaly_detector.py`): Identifies unexpected patterns in logs using advanced machine learning algorithms.
+- **Performance Optimization** (`performance_optimizer.py`): Optimizes audit logs, removes redundancy, and tracks execution time for enhanced efficiency.
 
 ### **4. Collaborative Contribution**
 - Pre-configured templates for bug reports, feature requests, and pull requests.
@@ -35,6 +36,7 @@ Sentinel Cardio is an advanced auditing and monitoring system designed to analyz
 3. **Analyze Logs**:
    - NLP processing (`nlp_audit_analysis.py`) provides context insights.
    - Anomaly detection (`anomaly_detector.py`) alerts you to suspicious activity.
+   - Performance optimization (`performance_optimizer.py`) streamlines audit logs for faster analysis.
 
 4. **Verify Integrity**:
    - Run `checksum_validator.py` to ensure files remain unaltered.

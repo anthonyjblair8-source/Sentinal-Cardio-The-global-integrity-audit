@@ -1,5 +1,7 @@
 # Sentinel Cardio: The Global Integrity Audit
 
+Description 
+
 Sentinel Cardio is an advanced auditing and monitoring system designed to analyze sensitive data, detect anomalies, ensure data integrity, and optimize performance. This robust framework helps organizations maintain transparency and security throughout their workflows.
 
 ---

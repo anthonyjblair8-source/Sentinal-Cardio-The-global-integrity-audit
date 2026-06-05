@@ -69,3 +69,124 @@ jobs:
          uses: github/codeql-action/upload-sarif@v3
          with:
           sarif_file: ./apisec-results.sarif
+name: CI + APIsec Security Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+  apisec_scan:
+    name: APIsec security scan
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run APIsec scan
+        id: apisec
+        uses: apisec-inc/apisec-github-action@v2
+        with:
+          apisec_api_key: ${{ secrets.APISEC_API_KEY }}
+          apisec_project_id: ${{ secrets.APISEC_PROJECT_ID }}
+          apisec_test_id: ${{ secrets.APISEC_TEST_ID }}
+          # if the action supports it; otherwise we fail manually below
+          fail_on_severity: critical
+
+      - name: Fail on critical vulnerabilities (defensive)
+        if: always()
+        run: |
+          if [ -f apisec-report/summary.json ]; then
+            CRITICAL=$(jq '.critical // 0' apisec-report/summary.json)
+            echo "Critical findings: $CRITICAL"
+            if [ "$CRITICAL" -gt 0 ]; then
+              echo "Critical vulnerabilities found. Failing job."
+              exit 1
+            fi
+          fi
+
+      - name: Upload APIsec report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apisec-report
+          path: apisec-report/
+
+      - name: Upload SARIF to code scanning
+        if: always() && hashFiles('apisec-report/results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: apisec-report/results.sarif
+
+      - name: Notify Slack on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "text": ":rotating_light: APIsec scan failed for *${{ github.repository }}* on *${{ github.ref_name }}*.\nWorkflow: ${{ github.workflow }}\nRun: ${{ github.run_number }}\nURL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  build:
+    name: Build application
+    needs: apisec_scan
+    runs-on: ubuntu-latest
+    if: success()   # only if tests + scan passed
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+  deploy:
+    name: Deploy (example placeholder)
+    needs: build
+    runs-on: ubuntu-latest
+    if: success() && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          echo "Deploying build..."
+          # put your real deploy command here

@@ -32,8 +32,8 @@ jobs:
 
     - name: Build Code
       run: |
-        # Manual build steps bypass the failing autobuild.sh
-        echo "Manual build configuration active for Sentinel-Cardio."
+        # Manual build configuration to bypass failing autobuild.sh
+        echo "Building Sentinel-Cardio in manual mode."
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

@@ -1,0 +1,34 @@
+name: RCP-Lattice Integrity Audit
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  audit-and-heal:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to reset the state
+      issues: write   # Needed to report the anomaly
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run RCP-Lattice Repair Logic
+        id: repair
+        run: |
+          # Executes the repair script we defined
+          python repair_lattice.py > repair_log.txt
+          if grep -q "Anomaly detected" repair_log.txt; then
+            echo "anomaly=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report Integrity Anomaly
+        if: steps.repair.outputs.anomaly == 'true'
+        run: |
+          gh issue create \
+            --title "Integrity Alert: RCP-Lattice Anomaly Detected" \
+            --body "The digital organism detected a state mismatch. Repair protocol initiated. Log follows: $(cat repair_log.txt)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

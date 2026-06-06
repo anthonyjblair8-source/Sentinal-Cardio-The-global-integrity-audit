@@ -10,6 +10,9 @@ on:
   schedule:
     - cron: "0 * * * *"  # Runs every hour
 
+permissions:
+  contents: read
+
 jobs:
   forensic-audit:
     runs-on: ubuntu-latest

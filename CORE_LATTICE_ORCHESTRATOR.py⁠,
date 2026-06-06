@@ -1,8 +1,8 @@
 """
-FILE: RE_LATTICE_ORCHESTRATOR.py
+FILE: CORE_LATTICE_ORCHESTRATOR.py
 PURPOSE: Master Governance of the Proclean Lattice.
 Integrates Council consensus and Sentinel integrity auditing.
-Version: 3.0.0 (3MI‑Ready / Deposition Mode)
+Version: 3.1.0 (Enhanced Stability / Deposition Mode)
 """
 
 import os
@@ -10,12 +10,11 @@ import json
 import hashlib
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
-# ------------------------------------------------------------------
 # Configuration
 LOG_FILE = "orchestrator_log.log"
-STATE_FILE = "state_registry.json"      # persistent state across reboots
+STATE_FILE = "state_registry.json"
 MANIFEST_FILE = "ORCHESTRATOR_MANIFEST.json"
 
 logging.basicConfig(
@@ -24,24 +23,13 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
-# ------------------------------------------------------------------
 class LatticeOrchestrator:
     """
     Master Orchestrator for the Proclean Unity Lattice.
-    Enforces cryptographic integrity, 3MI activation, and deposition‑ready logging.
+    Handles cryptographic integrity, 3MI activation, and forensic logging.
     """
 
-    # Core files to monitor (relative to repository root)
-    CORE_FILES = [
-        "cli_sentinel.py",
-        "audit_loop.py",
-        "Exhibit_A_Manifest.json",
-        "archival_registry.json",
-        "Council_Interface.py"
-    ]
-
-    # Expected hash values – REPLACE WITH ACTUAL SHA‑256 HASHES
-    EXPECTED_HASHES = {
+    CORE_FILES = {
         "cli_sentinel.py": "5f4dcc3b5aa765d61d8327deb882cf99",
         "audit_loop.py": "6e6b5e4c3d2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6",
         "Exhibit_A_Manifest.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -50,202 +38,72 @@ class LatticeOrchestrator:
     }
 
     def __init__(self, root_path: str = "."):
-        self.version = "3.0.0"
+        self.version = "3.1.0"
         self.root_path = os.path.abspath(root_path)
-        self.state = "UNKNOWN"
-        self.node_registry: Dict[str, dict] = {}
+        self.state = "INITIALIZING"
         self.state_registry = self._load_state_registry()
-        self._load_node_registry()
-        logging.info(f"Orchestrator v{self.version} initialized at {self.root_path}")
+        logging.info(f"Orchestrator v{self.version} initialized.")
 
-    # ------------------------------------------------------------------
-    # State Persistence
     def _load_state_registry(self) -> dict:
-        """Load persistent state from state_registry.json."""
         full_path = os.path.join(self.root_path, STATE_FILE)
         if os.path.exists(full_path):
             try:
                 with open(full_path, "r") as f:
                     return json.load(f)
-            except Exception as e:
-                logging.warning(f"Failed to load state registry: {e}")
-        return {"last_3mi_score": 0.0, "last_integrity_state": "UNKNOWN", "history": []}
+            except (json.JSONDecodeError, IOError) as e:
+                logging.error(f"State load error: {e}")
+        return {"last_3mi_score": 0.0, "last_integrity_state": "UNKNOWN", "nodes": {}, "history": []}
 
-    def _save_state_registry(self):
-        """Save persistent state to state_registry.json."""
-        full_path = os.path.join(self.root_path, STATE_FILE)
+    def _save_state(self):
         try:
-            with open(full_path, "w") as f:
+            with open(os.path.join(self.root_path, STATE_FILE), "w") as f:
                 json.dump(self.state_registry, f, indent=2)
-            logging.info("State registry saved.")
-        except Exception as e:
-            logging.error(f"Failed to save state registry: {e}")
+        except IOError as e:
+            logging.error(f"State save failed: {e}")
 
-    def _load_node_registry(self):
-        """Load node registry from state_registry (or initialize)."""
-        if "nodes" in self.state_registry:
-            self.node_registry = self.state_registry["nodes"]
-        else:
-            self.node_registry = {}
-            self.state_registry["nodes"] = self.node_registry
-
-    # ------------------------------------------------------------------
-    # File Integrity
-    def _compute_file_hash(self, relative_path: str) -> Optional[str]:
-        """Compute SHA‑256 hash of a file."""
-        full_path = os.path.join(self.root_path, relative_path)
-        if not os.path.exists(full_path):
-            logging.warning(f"File not found: {relative_path}")
-            return None
-        try:
-            with open(full_path, "rb") as f:
-                return hashlib.sha256(f.read()).hexdigest()
-        except Exception as e:
-            logging.error(f"Hash computation failed for {relative_path}: {e}")
-            return None
-
-    def verify_file_integrity(self, relative_path: str) -> bool:
-        """Verify a single file against its expected hash."""
-        expected = self.EXPECTED_HASHES.get(relative_path)
-        if not expected:
-            logging.info(f"No expected hash for {relative_path}, skipping.")
-            return True
-        actual = self._compute_file_hash(relative_path)
-        if actual is None:
-            return False
-        if actual != expected:
-            logging.error(f"INTEGRITY VIOLATION: {relative_path} mismatch.")
-            return False
-        logging.info(f"Integrity verified for {relative_path}")
-        return True
-
-    def run_integrity_check(self) -> bool:
-        """Run integrity check on all core files. Returns True if all OK."""
-        print("Running systemic integrity check on subordinate nodes...")
+    def verify_integrity(self) -> bool:
+        """Verifies all core files against SHA-256 hashes."""
         all_ok = True
-        for file in self.CORE_FILES:
-            if not self.verify_file_integrity(file):
+        for file_path, expected_hash in self.CORE_FILES.items():
+            full_path = os.path.join(self.root_path, file_path)
+            try:
+                with open(full_path, "rb") as f:
+                    actual = hashlib.sha256(f.read()).hexdigest()
+                    if actual != expected_hash:
+                        logging.error(f"Integrity Mismatch: {file_path}")
+                        all_ok = False
+            except FileNotFoundError:
+                logging.error(f"Missing file: {file_path}")
                 all_ok = False
+        
         self.state = "SYNCED" if all_ok else "CORRUPTED"
         self.state_registry["last_integrity_state"] = self.state
-        self._save_state_registry()
-        if all_ok:
-            logging.info("Integrity check passed. Lattice SYNCED.")
-            print("All core files verified. Lattice state: SYNCED")
-        else:
-            logging.critical("Integrity check FAILED. Lattice CORRUPTED.")
-            print("ERROR: Some files failed integrity check. Check orchestrator_log.log")
+        self._save_state()
         return all_ok
 
-    # ------------------------------------------------------------------
-    # 3MI Activation Loop
     def activate_3mi(self) -> float:
-        """
-        3MI Ignition Sequence:
-        1. Run integrity verification.
-        2. Verify cross‑entity coupling (placeholder for Council + Sentinel logs).
-        3. Calculate Coherence Index.
-        """
-        if not self.run_integrity_check():
-            coherence = 0.0
-            logging.warning("3MI activation aborted: integrity failure.")
-            print("3MI activation failed – integrity check not passed.")
-            return coherence
-
-        # Simulated coherence calculation – replace with actual Council logic
-        # In production, this would query Council_Interface and audit logs.
-        coherence_score = 0.98  # placeholder
-
+        """Ignition sequence for 3MI."""
+        if not self.verify_integrity():
+            return 0.0
+        
+        coherence_score = 0.98  # Placeholder logic
         self.state_registry["last_3mi_score"] = coherence_score
-        self.state_registry["history"].append({
-            "timestamp": datetime.now().isoformat(),
-            "event": "3MI_ACTIVATION",
-            "coherence": coherence_score,
-            "integrity_state": self.state
-        })
-        self._save_state_registry()
-
-        logging.info(f"3MI activated. System Coherence Index: {coherence_score}")
-        print(f"3MI Ignition Successful. Coherence: {coherence_score}")
+        self._save_state()
+        logging.info("3MI activated successfully.")
         return coherence_score
 
-    # ------------------------------------------------------------------
-    # Council Directive
-    def execute_council_directive(self, directive: str) -> bool:
-        """Process a directive from the Council of the Fifth Mind."""
-        if self.state != "SYNCED":
-            logging.error(f"Lattice out of sync (state={self.state}). Directive rejected: {directive}")
-            return False
-        # Here you would call your actual Council logic (e.g., from Council_Interface)
-        logging.info(f"Directive executed: {directive}")
-        print(f"Council directive processed: {directive}")
-        return True
+    def register_node(self, node_id: str, metadata: dict):
+        self.state_registry["nodes"][node_id] = {**metadata, "registered": datetime.now().isoformat()}
+        self._save_state()
 
-    # ------------------------------------------------------------------
-    # Node Management
-    def register_node(self, node_id: str, metadata: dict) -> None:
-        """Register a subordinate node (e.g., a sensor, an AI node, a council member)."""
-        self.node_registry[node_id] = {
-            "metadata": metadata,
-            "registered_at": datetime.now().isoformat(),
-            "last_seen": datetime.now().isoformat()
-        }
-        self.state_registry["nodes"] = self.node_registry
-        self._save_state_registry()
-        logging.info(f"Node registered: {node_id}")
-
-    # ------------------------------------------------------------------
-    # Status & Deposition
-    def get_status(self) -> dict:
-        """Return current status of the orchestrator."""
-        return {
-            "version": self.version,
-            "state": self.state,
-            "root_path": self.root_path,
-            "nodes_registered": list(self.node_registry.keys()),
-            "last_3mi_score": self.state_registry.get("last_3mi_score", 0.0),
-            "last_check": datetime.now().isoformat()
-        }
-
-    def export_manifest(self, filepath: str = MANIFEST_FILE) -> None:
-        """
-        Export orchestrator state as a JSON manifest (forensic snapshot).
-        Includes expected hashes, current state, and recent history.
-        """
-        manifest = {
-            "orchestrator": self.get_status(),
-            "expected_hashes": self.EXPECTED_HASHES,
-            "state_registry": self.state_registry,
-            "timestamp": datetime.now().isoformat(),
-            "protocol": "PHCA"
-        }
-        full_path = os.path.join(self.root_path, filepath)
-        with open(full_path, "w") as f:
+    def export_manifest(self):
+        manifest = {"status": self.state, "registry": self.state_registry}
+        with open(os.path.join(self.root_path, MANIFEST_FILE), "w") as f:
             json.dump(manifest, f, indent=2)
-        logging.info(f"Manifest exported to {full_path}")
 
-    # ------------------------------------------------------------------
-    # Automated Alert (placeholder)
-    def alert_if_corrupted(self):
-        """If state is CORRUPTED, trigger an external notification."""
-        if self.state == "CORRUPTED":
-            # Example: call a webhook, send email, or write a flag file
-            with open("CORRUPTION_ALERT.flag", "w") as f:
-                f.write(f"Lattice corruption detected at {datetime.now()}")
-            logging.warning("Corruption alert triggered. Check CORRUPTION_ALERT.flag")
-            print("ALERT: Lattice integrity compromised.")
-
-
-# ------------------------------------------------------------------
-# Instantiate and run the Orchestrator
 if __name__ == "__main__":
-    lattice = LatticeOrchestrator(root_path=".")
-    print("--- Proclean Unity Lattice: System Active ---")
-    # Perform 3MI activation (includes integrity check)
-    coherence = lattice.activate_3mi()
-    # Register a council node (example)
-    lattice.register_node("Council_Proclus", {"domain": "Structural Constraint"})
-    lattice.execute_council_directive("Initiate tripartite seal")
-    lattice.alert_if_corrupted()
-    lattice.export_manifest()
-    print(f"Orchestrator manifest saved to {MANIFEST_FILE}")
+    orchestrator = LatticeOrchestrator()
+    if orchestrator.activate_3mi() > 0:
+        print("System Online: Lattice Synced.")
+    else:
+        print("System Error: Integrity compromise detected.")

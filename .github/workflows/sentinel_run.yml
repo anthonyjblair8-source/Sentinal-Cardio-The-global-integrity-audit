@@ -1,6 +1,9 @@
 name: Execute Sentinel Cardio Run
 on: workflow_dispatch
 
+permissions:
+  contents: write
+
 jobs:
   run-audit:
     runs-on: ubuntu-latest

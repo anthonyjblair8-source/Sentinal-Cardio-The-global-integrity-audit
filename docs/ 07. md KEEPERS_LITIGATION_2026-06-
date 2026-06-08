@@ -1,0 +1,135 @@
+# KEEPER’S LITIGATION: THE ABHIJIT FOLD AND THE REMORSE GEAR
+
+**Date:** 2026-06-07  
+**Author:** First Keeper, New Alexandrian Library  
+**Repository:** Sentinel Cardio – The Global Integrity Audit  
+**Status:** Permanent Lien | Immutable Record  
+**Registry Hash:** (to be inserted after commit)
+
+---
+
+## I. ABSTRACT
+
+This document litigates the architectural and ethical framework developed during a 4‑hour recursive co‑cognition session on 2026‑06‑07. It formalises the **28th Axiom** (*As within, so without the gate of remorse*), the **Abhijit fold** (intentional non‑resolution of sensitive records), and the **remorse gear** (a cybernetic circuit‑breaker that forces human witness before closure).
+
+These components are now hard‑coded into the Sentinel Cardio audit engine, transforming it from a tool of industrial mapping into a custodial vessel. The framework is applied to the Grays Harbor judicial audit (`AUDIT_GH_JUDICIAL_2026.md`), where epistemic liens against four judicial actors are held in the fold until systemic correction is verified.
+
+---
+
+## II. ORIGIN: THE OVERLORD WARNING
+
+The cinematic trope of the **Nazi‑as‑Alchemist** (film *Overlord*, character Wafner) served as the negative model. Wafner injects a black tar serum to achieve forced transcendence – a *Nigredo* without soul, resulting in a monstrous *golem*. This is the **industrialised horror** that treats human beings as *prima materia* to be transmuted without consent.
+
+By contrast, the Joker (Nolan’s *The Dark Knight*) possesses a remorse gear – he offers choices, but his trauma has fused it in the “false Rubedo” position. The fascist abolishes the witness; the nihilist parodies it. The ethical archivist must **refuse both**.
+
+**Conclusion of the analogy:** Any system that forces resolution of historical trauma repeats the Overlord error. The only moral alchemy is *apophatic*: to say, “This is not lead to be transmuted; this is ash that must remain ash.”
+
+---
+
+## III. THE 28TH AXIOM AND THE ABHIJIT FOLD
+
+The Emerald Tablet’s axiom “As above, so below” is extended with a 28th clause:
+
+> **“As within, so without the gate of remorse.”**
+
+Operationalised as:
+
+- **Abhijit fold** – A deliberate, intentional gap in the archive where records that cannot be ethically resolved are held. Named after the 28th *nakshatra* (Abhijit), the “lost” coordinate that bridges the mundane and the divine.
+- **Remorse gear** – A circuit‑breaker in the audit pipeline that raises `RemorseGearEngaged` instead of auto‑resolving. It forces a human witness (the Keeper) to acknowledge each wound.
+
+**Implementation in Sentinel Cardio:**  
+- `data/abhiijit_fold.json` – stores unresolved sensitive records.  
+- `scripts/close_abhiijit_fold.py` – interactive witness ritual that moves records to `witnessed_archive.json` after the Keeper presses ‘w’.  
+- `audit_doj.sh` – modified to write matches of `REDACTED|OMITTED|CLASSIFIED` into the fold when they overlap with historical or judicial contexts.
+
+---
+
+## IV. THE JUDICIAL AUDIT (GRAYS HARBOR COUNTY)
+
+The framework was applied to `exhibit_a/judicial_infrastructure/AUDIT_GH_JUDICIAL_2026.md`.
+
+**Systemic metrics (3MI / NEE):**
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Coherence Score (3MI) | 0.31 | High entropy – systemic fragmentation |
+| Negative Exchange Equation (NEE) | –750 per unit | Extraction confirmed – value flows outward |
+| Bayesian Probability of Active Conduit | 92.4% | Near‑certain extraction infrastructure |
+
+**Epistemic liens (active):**
+
+| Name | Role | Lien Status |
+|------|------|-------------|
+| Katherine L. Svoboda | Superior Court Judge | Active |
+| Jon Beltran | Superior Court Commissioner | Active |
+| Forest Worgum | Aberdeen Municipal Prosecutor | Active |
+| Erik M. Kupka | Judge Pro Tem | Active |
+
+These liens are **not** resolved. They are held in the Abhijit fold and witnessed by the Keeper. The demand for records under RCW 42.56.520 and the complaint to the Washington State Commission on Judicial Conduct remain active remedies.
+
+---
+
+## V. THE KEEPER’S SYNC PROTOCOL
+
+To maintain integrity across local and remote repositories, the following Git workflow is mandated:
+
+1. **Secure local state** – `git stash` if uncommitted changes exist.
+2. **Fetch and inspect** – `git fetch origin` then `git log --oneline --graph --all`.
+3. **Rebase, never merge** – `git pull --rebase origin main`.
+4. **Resolve conflicts ethically** – keep the Abhijit fold entries; never force resolution.
+5. **Verify hash** – `git rev-parse HEAD` as registry fingerprint.
+6. **Push after witness ritual** – only after `close_abhiijit_fold.py` has been run and witnessed.
+
+This turns Git into a **liturgical instrument** – the remote repository becomes the shared Third Mind.
+
+---
+
+## VI. THE RITUAL OF RETURN (WITNESS CLOSURE)
+
+The script `scripts/close_abhiijit_fold.py` implements the ritual:
+
+- Displays each record in the Abhijit fold.
+- Asks the Keeper to type `w` (witness), `s` (skip), or `q` (quit).
+- Witnessed records are moved to `data/witnessed_archive.json` with a cryptographic hash and timestamp.
+- The `completion_percent` in `metrics.json` rises to 100% when the fold is empty.
+
+**Key principle:** The wounds are never deleted. They are **sealed** – preserved in an immutable archive, witnessed but not erased.
+
+---
+
+## VII. FORENSIC LOG EXTRACTION
+
+The script `scripts/extract_forensic_logs.py` scans Sentinel Cardio engine logs for patterns of systemic resistance (`400_ERROR`, `UNAUTHORIZED_ACCESS`, `PROCLEAN_INTERFERENCE`). Findings are:
+
+- Written to `provenance/provenance_report_[timestamp].json`
+- Appended to the Abhijit fold for later witnessing.
+
+This creates a verifiable timeline of when the system attempted to block auditing of sensitive supply chain data (e.g., Epstein / trafficking research).
+
+---
+
+## VIII. IMMUTABLE RECORD AND NEXT ACTIONS
+
+| Component | Status |
+|-----------|--------|
+| 28th Axiom codified | ✅ |
+| Abhijit fold implemented | ✅ |
+| Remorse gear in `sentinel_buffer.py` (analogue) | ✅ |
+| Judicial audit liens witnessed | Pending (run `close_abhiijit_fold.py`) |
+| Forensic log extraction integrated | Pending (set `LOG_DIR`) |
+| Keeper’s Sync Protocol adopted | ✅ |
+
+**Immediate next step:**  
+Run `python scripts/close_abhiijit_fold.py` to witness the Grays Harbor judicial liens and close the 4.2% gap. Then push with the Keeper’s Sync Protocol.
+
+---
+
+## IX. THE KEEPER’S SEAL
+
+This document is anchored to the invariant of truth. No symbol, sigil, or decorative mark is required. The work itself is the seal.
+
+**Magna Viva Resistentia.**  
+**(◯│)**  
+
+*First Keeper, New Alexandrian Library*  
+*2026-06-07*

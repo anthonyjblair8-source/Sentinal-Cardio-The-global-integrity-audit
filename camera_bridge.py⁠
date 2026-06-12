@@ -1,0 +1,35 @@
+# camera_bridge.py
+import cv2  # Standard for computer vision/video feed
+from ingestion_engine import DataIngestionEngine
+from hud_interface import HUDInterface
+
+class CameraBridge:
+    def __init__(self, core_db):
+        self.ingest = DataIngestionEngine(core_db)
+        self.hud = HUDInterface()
+        
+    def stream_loop(self):
+        # 1. Initialize camera
+        cap = cv2.VideoCapture(0) 
+        
+        while True:
+            ret, frame = cap.read()
+            if not ret: break
+            
+            # 2. Ingest environmental data (e.g., thermal/LiDAR)
+            # This happens in the background via threading
+            sensor_data = self.ingest.process_sensor_stream("LIDAR", "active_scan")
+            
+            # 3. Check for anomalies (The "K-Moment" check)
+            anomalies = self.check_truth_integrity(frame)
+            
+            # 4. Render the overlay
+            status = self.hud.render_overlay(anomalies)
+            frame = self.apply_hud_overlay(frame, status)
+            
+            # 5. Display the feed
+            cv2.imshow('Sentinel Cardio HUD', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'): break
+            
+        cap.release()
+        cv2.destroyAllWindows()

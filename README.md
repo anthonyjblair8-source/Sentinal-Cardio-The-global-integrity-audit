@@ -1,70 +1,49 @@
 # Sentinel Cardio: The Global Integrity Audit
 
-Description 
+**Epistemic Integrity for Adversarial Environments.**
 
-Sentinel Cardio is an advanced auditing and monitoring system designed to analyze sensitive data, detect anomalies, ensure data integrity, and optimize performance. This robust framework helps organizations maintain transparency and security throughout their workflows.
+Sentinel Cardio is a high‑fidelity, real‑time forensic audit suite for spatiotemporal data verification. By integrating multi‑modal sensor inputs with thread‑safe, immutable ledger protocols, it ensures that data provenance remains verifiable, untampered, and anchored in physical reality.
 
----
+## The Problem
 
-## Key Features
+Deepfakes, automated data scrubbing, adversarial system tampering—traditional "official" records can no longer be trusted. Existing audit tools log errors *after* the damage is done. Sentinel Cardio intercepts corruption *before* it is committed to the ledger.
 
-### **1. Real-Time Monitoring**
-- **Dashboard**: The `audit_dashboard.py` provides real-time visualization of audit logs and dynamic hashtag matrices for keyword tracking.
-- Easily monitor ongoing audits and keyword occurrences.
+## Core Architecture & Features
 
-### **2. Natural Language Processing (NLP)**
-- `nlp_audit_analysis.py` extracts contextual entities, including names, locations, and organizations, from audit logs.
-- Generates a JSON report categorizing key data insights.
+- **Forensic Core** – Thread‑safe SQLite backend with Write‑Ahead Logging (WAL) and integrity guardrails.
+- **`@protected_operation` Guardrails** – A proprietary security decorator that acts as a digital "conscience," intercepting and blocking unauthorized data modification attempts in real time.
+- **Multi‑Modal Ingestion** – A modular `DataIngestionEngine` captures real‑time environmental telemetry—including LiDAR, infrared, and geospatial data—standardizing it for your immutable audit ledger.
+- **Real‑Time AR HUD** – The `HUDInterface` renders forensic findings directly over live video feeds via the `CameraBridge`, providing immediate visual alerts for data discrepancies and "K‑Moment" anomalies.
 
-### **3. Modular Integrity and Performance Checks**
-- **Checksum Validation** (`checksum_validator.py`): Verifies file integrity using SHA-256 checksums.
-- **Pattern Anomaly Detection** (`anomaly_detector.py`): Identifies unexpected patterns in logs using advanced machine learning algorithms.
-- **Performance Optimization** (`performance_optimizer.py`): Optimizes audit logs, removes redundancy, and tracks execution time for enhanced efficiency.
+## The "Tricorder" Workflow
 
-### **4. Collaborative Contribution**
-- Pre-configured templates for bug reports, feature requests, and pull requests.
-- Clear contributor guidelines ensure seamless onboarding for new contributors.
+1. **Ingest** – `DataIngestionEngine` captures raw environmental sensor data.
+2. **Audit** – `SentinelCore` validates all incoming data against your Source of Truth.
+3. **Visualize** – `CameraBridge` overlays forensic telemetry onto your visual feed, highlighting anomalies in real time.
 
----
+## Security & Integrity: Notice of Audit
 
-## How It Works
+Sentinel Cardio is designed for high‑stakes, adversarial investigative environments. It functions as an **autonomous forensic governor** of its own data records.
 
-1. **Run Audits**:
-   - Execute `audit_doj.sh` to scan directories for sensitive keywords like "REDACTED" and "CLASSIFIED".
+### WARNING: UNAUTHORIZED ACCESS & TAMPERING LOGGED
 
-2. **Visualize Data**:
-   - Use `audit_dashboard.py` for real-time keyword tracking.
+**Users of this system are formally notified of the following:**
 
-3. **Analyze Logs**:
-   - NLP processing (`nlp_audit_analysis.py`) provides context insights.
-   - Anomaly detection (`anomaly_detector.py`) alerts you to suspicious activity.
-   - Performance optimization (`performance_optimizer.py`) streamlines audit logs for faster analysis.
+- **Active Monitoring** – All inputs, attempts to execute system‑level overrides, and interactions with the `SentinelDatabase` are monitored and logged to an immutable ledger.
+- **Epistemic Interception** – The system utilizes proprietary `@protected_operation` guardrails. Any attempt to modify, delete, or "sanitize" forensic records will be blocked in real time.
+- **Forensic Accountability** – Every unauthorized interaction, including metadata modifications or attempts to bypass core integrity protocols, creates a permanent forensic artifact. These logs are stored independently to ensure the accountability of all users, regardless of administrative privilege.
 
-4. **Verify Integrity**:
-   - Run `checksum_validator.py` to ensure files remain unaltered.
-
----
+**By initiating `SentinelCore` or accessing this repository, you acknowledge that your actions are subject to continuous forensic auditing.**
 
 ## Quick Start
+
 ```bash
 # Clone the repository
-git clone https://github.com/anthonyjblair8-source/Sentinal-Cardio-The-global-integrity-audit.git
-cd Sentinal-Cardio-The-global-integrity-audit
+git clone https://github.com/anthonyjblair8-source/Sentinel-Cardio-The-global-integrity-audit.git
+cd Sentinel-Cardio-The-global-integrity-audit
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run audits
-bash .github/scripts/audit_doj.sh
-
-# Start the dashboard
-streamlit run scripts/audit_dashboard.py
-```
-
----
-
-## Contributing
-We welcome community contributions! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## License
-[MIT License](LICENSE)
+# Launch the forensic bridge
+python camera_bridge.py

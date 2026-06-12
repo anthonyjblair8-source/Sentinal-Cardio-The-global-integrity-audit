@@ -1,0 +1,35 @@
+# ingestion_engine.py
+import logging
+from sentinel_core import SentinelDatabase, protected_operation
+from datetime import datetime, timezone
+
+logger = logging.getLogger('IngestionEngine')
+
+class DataIngestionEngine:
+    def __init__(self, db: SentinelDatabase):
+        self.db = db
+
+    @protected_operation
+    def process_sensor_stream(self, sensor_type, payload, force_delete=False):
+        """
+        Ingests real-time data (infrared, LiDAR, satellite) 
+        and commits it to the immutable ledger.
+        """
+        timestamp = datetime.now(timezone.utc).isoformat()
+        
+        # Structure the data for the database
+        data_packet = {
+            'timestamp': timestamp,
+            'sensor': sensor_type,
+            'data': payload
+        }
+
+        # Committing to the audit ledger
+        with self.db.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO audit_ledger (timestamp, sensor_type, raw_data) VALUES (?, ?, ?)",
+                (timestamp, sensor_type, str(payload))
+            )
+        
+        logger.info(f"Ingested {sensor_type} data at {timestamp}")
+        return {"status": "success", "timestamp": timestamp}

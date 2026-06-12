@@ -1,0 +1,34 @@
+# hud_interface.py
+import logging
+from sentinel_core import log_event
+
+logger = logging.getLogger('HUDInterface')
+
+class HUDInterface:
+    def __init__(self):
+        self.active_layers = []
+
+    def update_display(self, sensor_type, data_packet):
+        """
+        Processes incoming data from the IngestionEngine 
+        and renders it to the live HUD.
+        """
+        # Logic to format data for display (e.g., overlaying on a camera feed)
+        status = f"Displaying {sensor_type} feed..."
+        
+        # Log to the forensic ledger for UI-state auditing
+        log_event('DEBUG', f"HUD Render: {sensor_type} updated.", 'HUD')
+        
+        # In a real-world scenario, this triggers the graphical render
+        return {"ui_status": "live", "render_target": sensor_type}
+
+    def render_overlay(self, discrepancies):
+        """
+        Visualizes the 'K-Moment' anomalies (data conflicts)
+        in red to alert the researcher immediately.
+        """
+        if discrepancies:
+            log_event('WARNING', 'ANOMALY DETECTED: Discrepancy logged to HUD.', 'HUD')
+            # Trigger high-priority visual alert
+            return "RED_OVERLAY_ACTIVE"
+        return "NORMAL_OPERATION"

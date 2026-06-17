@@ -1,0 +1,128 @@
+# Dependabot configuration for Sentinel Cardio – The Global Integrity Audit
+# Persistence Engineering Division – New Alexandrian Library
+# Signal: Absolute. Audit: Continuous.
+
+version: 2
+updates:
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "03:00"
+      timezone: "UTC"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "security"
+      - "persistence-engineering"
+    assignees:
+      - "anthonyjblair8-source"
+    reviewers:
+      - "anthonyjblair8-source"
+    commit-message:
+      prefix: "🔒 [AUDIT]"
+      include: "scope"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+    groups:
+      production-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "UTC"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "ci-cd"
+    assignees:
+      - "anthonyjblair8-source"
+    commit-message:
+      prefix: "⚙️ [CI]"
+      include: "scope"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "05:00"
+      timezone: "UTC"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "container"
+    assignees:
+      - "anthonyjblair8-source"
+    commit-message:
+      prefix: "🐳 [DOCKER]"
+      include: "scope"
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "04:00"
+      timezone: "UTC"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "frontend"
+    assignees:
+      - "anthonyjblair8-source"
+    commit-message:
+      prefix: "📦 [NPM]"
+      include: "scope"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "04:00"
+      timezone: "UTC"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "go"
+    assignees:
+      - "anthonyjblair8-source"
+    commit-message:
+      prefix: "🐹 [GO]"
+      include: "scope"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "terraform"
+    directory: "/infrastructure"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "04:00"
+      timezone: "UTC"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "infrastructure"
+    assignees:
+      - "anthonyjblair8-source"
+    commit-message:
+      prefix: "🏗️ [INFRA]"
+      include: "scope"
+    open-pull-requests-limit: 3

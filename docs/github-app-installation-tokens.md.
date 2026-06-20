@@ -1,0 +1,43 @@
+# GitHub App installation tokens compatibility
+
+GitHub is rolling out a new **stateless (JWT-style)** format for GitHub App installation tokens.  
+This file documents how Sentinal‑Cardio remains compatible during and after the rollout.
+
+## Token formats
+
+GitHub App installation tokens now come in two formats:
+
+- **Old (stateful) tokens**
+  - Short, opaque strings
+  - No dots (`.`) in the value
+
+- **New (stateless) tokens**
+  - Start with `ghs_`
+  - Much longer (~520 characters)
+  - Contain two dots (`.`), similar to JWTs
+  - Must still be treated as **opaque** (do not decode)
+
+## Temporary per-request override header
+
+GitHub provides a temporary header to control which token format is returned from:
+
+`POST /app/installations/:installation_id/access_tokens`
+
+Header:
+
+- `X-GitHub-Stateless-S2S-Token: enabled`  
+  → Force **new stateless** token format
+
+- `X-GitHub-Stateless-S2S-Token: disabled`  
+  → Force **old opaque** token format
+
+If the header is omitted, GitHub’s normal rollout behavior applies.
+
+### Example: Requesting an installation token (curl)
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <JWT_FROM_APP_PRIVATE_KEY>" \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Stateless-S2S-Token: enabled" \
+  https://api.github.com/app/installations/<installation_id>/access_tokens
